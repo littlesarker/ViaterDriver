@@ -37,7 +37,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     // The user has not logged in yet. Go to the login activity.
-                    Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                 }
 

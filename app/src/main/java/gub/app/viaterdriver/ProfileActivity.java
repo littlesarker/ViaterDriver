@@ -17,10 +17,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        id=findViewById(R.id.UserID);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         name=findViewById(R.id.UserName_ID);
         mobile=findViewById(R.id.phoneNumber);
-        verify=findViewById(R.id.verifyMeID);
+
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("meDB", Context.MODE_PRIVATE);
@@ -30,10 +33,10 @@ public class ProfileActivity extends AppCompatActivity {
         String Vv=sharedPreferences.getString("vv", "");
 
 
-        id.setText("User ID : " +Uid);
+
         name.setText("Name : "+userName);
         mobile.setText("Mobile : " +U_mobile);
-        verify.setText("Verified : "+Vv);
+
 
 
 

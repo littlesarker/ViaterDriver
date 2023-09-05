@@ -21,22 +21,13 @@
         android:textStyle="bold" />
 
 
-    <Button
-        android:background="@drawable/bg_blank_round"
-        android:id="@+id/changePassID"
-        android:layout_marginTop="25dp"
-        android:layout_below="@id/NMID"
-        android:text="Change Password"
-        android:textSize="22sp"
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"/>
+
 
     <Button
         android:background="@drawable/bg_blank_round"
         android:id="@+id/UpdateProfileID"
         android:layout_marginTop="25dp"
-        android:layout_below="@id/changePassID"
+        android:layout_below="@id/NMID"
         android:text="Update profile"
         android:textSize="22sp"
         android:textAlignment="center"

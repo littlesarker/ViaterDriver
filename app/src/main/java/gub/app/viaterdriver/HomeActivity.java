@@ -11,11 +11,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,7 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
@@ -37,13 +41,14 @@ public class HomeActivity extends AppCompatActivity {
 
     ImageView notify, profile;
     private TextView MyName;
+    private  TextView textViewresponse;
+    ListView listView;
 
+    //the hero list where we will store all the hero objects after parsing json
+    List<Heros> heroList;
 
-    private String URLstring = "https://demonuts.com/Demonuts/JsonTest/Tennis/json_parsing.php";
     private static ProgressDialog mProgressDialog;
-    private ListView listView;
-    ArrayList<DataModel> dataModelArrayList;
-    private ListAdapter listAdapter;
+
 
 
     @Override
@@ -51,11 +56,16 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         profile = findViewById(R.id.img);
         notify = findViewById(R.id.notifyID);
         MyName=findViewById(R.id.driverNameID);
-        ListView listView = findViewById(R.id.lv);
+        listView = (ListView) findViewById(R.id.listView);
+        heroList = new ArrayList<>();
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation1);
 
 
@@ -79,6 +89,28 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Heros dataModel= heroList.get(position);
+
+                String RID=dataModel.getRequestI().toString();
+
+             Toast.makeText(getApplicationContext(),dataModel.getRequestI().toString(),Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(getApplicationContext(), BidingActivity.class);
+                // now by putExtra method put the value in key, value pair key is
+                // message_key by this key we will receive the value, and put the string
+                intent.putExtra("message_key", RID);
+                // start the Intent
+                startActivity(intent);
+
+
+            }
+        });
+
 
 
         bottomNavigationView.setSelectedItemId(R.id.home);
@@ -186,47 +218,41 @@ public class HomeActivity extends AppCompatActivity {
     }
     private void retrieveJSON() {
 
-        showSimpleProgressDialog(this, "Loading...","Fetching Request",false);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URLstring,
+
+        String Ride_url="https://viater.vercel.app/api/order/get-orders";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,Ride_url ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        //hiding the progressbar after completion
 
-                        Log.d("strrrrr", ">>" + response);
 
                         try {
-
+                            //getting the whole json object from the response
                             JSONObject obj = new JSONObject(response);
 
+                            //we have the array named hero inside the object
+                            //so here we are getting that json array
+                            JSONArray heroArray = obj.getJSONArray("data");
 
-                                dataModelArrayList = new ArrayList<>();
-                                JSONArray dataArray  = obj.getJSONArray("data");
+                            //now looping through all the elements of the json array
+                            for (int i = 0; i < heroArray.length(); i++) {
+                                //getting the json object of the particular index inside the array
+                                JSONObject heroObject = heroArray.getJSONObject(i);
 
-                                for (int i = 0; i < dataArray.length(); i++) {
-
-                                    DataModel playerModel = new DataModel();
-                                    JSONObject dataobj = dataArray.getJSONObject(i);
-
-                                    playerModel.setmID(dataobj.getString("id"));
-                                    playerModel.setmFrom_lat(dataobj.getString("from_lat"));
-                                    playerModel.setmFrom_lng(dataobj.getString("from_lng"));
-                                    playerModel.setMto_lat(dataobj.getString("to_lat"));
-                                    playerModel.setMto_lng(dataobj.getString("to_lng"));
-                                    playerModel.setmBudget(Integer.parseInt(dataobj.getString("budget")));
-                                    playerModel.setmAdditionalInfo(dataobj.getString("additional_requirements"));
-                                    playerModel.setmCreatedAT(dataobj.getString("created_at"));
-                                    playerModel.setmDeparture_time(dataobj.getString("departure_time"));
-                                    playerModel.setmStatus(dataobj.getString("status"));
+                                //creating a hero object and giving them the values from json object
+                                Heros hero = new Heros(heroObject.getString("id"), heroObject.getString("budget"),heroObject.getString("additional_requirements"));
 
 
-                                    dataModelArrayList.add(playerModel);
+                                heroList.add(hero);
+                            }
 
-                                }
+                            //creating custom adapter object
+                            LisAdapter adapter = new LisAdapter(heroList, getApplicationContext());
 
-                                setupListview();
-
-
+                            //adding the adapter to listview
+                            listView.setAdapter(adapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -239,7 +265,18 @@ public class HomeActivity extends AppCompatActivity {
                         //displaying the error in toast if occurrs
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                });
+                }){
+            @Override
+            public Map<String, String> getHeaders()  {
+                SharedPreferences sharedPreferences = getSharedPreferences("my_preferences", Context.MODE_PRIVATE);
+                String ck = sharedPreferences.getString("csk", "");
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json; charset=utf-8");
+                params.put("Cookie", ck);
+                System.out.println(ck);
+                return params;
+            }
+        };
 
         // request queue
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -248,11 +285,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
-    private void setupListview(){
-        removeSimpleProgressDialog();  //will remove progress dialog
-        listAdapter = new ListAdapter(this, dataModelArrayList);
-        listView.setAdapter(listAdapter);
-    }
+
 
     public static void removeSimpleProgressDialog() {
         try {

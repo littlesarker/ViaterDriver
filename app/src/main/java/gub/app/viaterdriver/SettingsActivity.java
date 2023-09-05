@@ -22,18 +22,11 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
 
-        resetPass=findViewById(R.id.changePassID);
+
         upDateProfile=findViewById(R.id.UpdateProfileID);
 
 
 
-        resetPass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(SettingsActivity.this,ResetPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
 
         upDateProfile.setOnClickListener(new View.OnClickListener() {
             @Override
