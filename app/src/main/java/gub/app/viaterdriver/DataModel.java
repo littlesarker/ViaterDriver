@@ -2,15 +2,14 @@ package gub.app.viaterdriver;
 
 public class DataModel {
 
-    private String mID,mFrom_lat,mFrom_lng,mto_lat,mto_lng,mAdditionalInfo,mCreatedAT,mDeparture_time,mStatus;
-
-    private  int mBudget;
+    private String  mBudget,mID,mFrom_lat,mFrom_lng,mto_lat,mto_lng,mAdditionalInfo,mCreatedAT,mDeparture_time,mStatus;
 
     public DataModel(){
 
     }
 
-    public DataModel(String mID, String mFrom_lat, String mFrom_lng, String mto_lat, String mto_lng, String mAdditionalInfo, String mCreatedAT, String mDeparture_time, String mStatus, int mBudget) {
+    public DataModel(String mBudget, String mID, String mFrom_lat, String mFrom_lng, String mto_lat, String mto_lng, String mAdditionalInfo, String mCreatedAT, String mDeparture_time, String mStatus) {
+        this.mBudget = mBudget;
         this.mID = mID;
         this.mFrom_lat = mFrom_lat;
         this.mFrom_lng = mFrom_lng;
@@ -20,6 +19,13 @@ public class DataModel {
         this.mCreatedAT = mCreatedAT;
         this.mDeparture_time = mDeparture_time;
         this.mStatus = mStatus;
+    }
+
+    public String getmBudget() {
+        return mBudget;
+    }
+
+    public void setmBudget(String mBudget) {
         this.mBudget = mBudget;
     }
 
@@ -93,13 +99,5 @@ public class DataModel {
 
     public void setmStatus(String mStatus) {
         this.mStatus = mStatus;
-    }
-
-    public int getmBudget() {
-        return mBudget;
-    }
-
-    public void setmBudget(int mBudget) {
-        this.mBudget = mBudget;
     }
 }

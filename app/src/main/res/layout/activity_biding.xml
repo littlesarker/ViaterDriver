@@ -5,16 +5,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
     tools:context=".BidingActivity">
 
 
+
     <TextView
-        android:layout_width="wrap_content"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:text="Ride Details"
+        android:id="@+id/RidedetailsID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </TextView>
+
+
+
+    <LinearLayout
+        android:layout_below="@id/RidedetailsID"
+        android:id="@+id/ACtionID"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Biding"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/accectID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blank_round"
+            android:text="Accept" />
+
+        <Button
+            android:layout_marginLeft="100dp"
+            android:id="@+id/rideRequestID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blank_round"
+            android:text="Start" />
+
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation2"
